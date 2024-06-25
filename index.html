@@ -3,16 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coin Clicker</title>
+    <title>3D Coin Tap Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-item">Flash Tapper</a>
+        <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+        <a href="referrals.html" class="nav-item">Referrals</a>
+    </nav>
     <div class="container">
-        <div class="coin" onclick="incrementBar()"></div>
         <div class="bar-container">
-            <div id="fill-bar" class="fill-bar"></div>
+            <div class="bar" id="tap-limit-bar">
+                <div class="bar-fill" id="tap-limit-fill"></div>
+            </div>
+            <div class="bar-label" id="tap-limit-label">Taps Left: 100</div>
         </div>
-        <p id="points">0 / 500 points</p>
+        <div class="coin" id="coin"></div>
+        <div class="bar-container">
+            <div class="bar" id="tap-count-bar">
+                <div class="bar-fill" id="tap-count-fill"></div>
+            </div>
+            <div class="bar-label" id="tap-count-label">Taps Done: 0</div>
+        </div>
+        <div class="button-container">
+            <div class="button-wrapper">
+                <button class="cute-button" id="upgrade-button">Upgrade</button>
+                <div class="mini-page" id="upgrade-mini-page">
+                    <h3>Upgrade</h3>
+                    <p>Upgrade your tools to enhance performance!</p>
+                </div>
+            </div>
+            <div class="button-wrapper">
+                <button class="cute-button" id="dailyclaim-button">Daily Claim</button>
+                <div class="mini-page" id="dailyclaim-mini-page">
+                    <h3>Daily Claim</h3>
+                    <p>Claim your daily rewards here!</p>
+                </div>
+            </div>
+            <div class="button-wrapper">
+                <button class="cute-button" id="tasks-button">Tasks</button>
+                <div class="mini-page" id="tasks-mini-page">
+                    <h3>Tasks</h3>
+                    <p>Complete tasks to earn rewards!</p>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
