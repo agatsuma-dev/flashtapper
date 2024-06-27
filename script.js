@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const depositAddress = document.getElementById('deposit-address');
         depositAddress.style.display = 'block';
         setTimeout(() => {
-            depositAddress.textContent = 'Deposit Address: 123456';
+            depositAddress.textContent = 'Deposit Address: 0xcC9C2344296E2758c4d032a94D4244432d20beCe';
         }, 2000);
     }
 });
