@@ -7,38 +7,48 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Flash Tapper</h1>
+    <div class="header">
+        <h1>Flash Tapper</h1>
+    </div>
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'flash-tapper')">Flash Tapper</button>
+        <button class="tab-button" onclick="openTab(event, 'leaderboard')">Leaderboard</button>
+        <button class="tab-button" onclick="openTab(event, 'referrals')">Referrals</button>
+    </div>
+    <div class="matic-balance-button" onclick="showMaticBalance()">Matic Balance</div>
+    <div id="matic-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMaticModal()">&times;</span>
+            <p id="matic-balance">Matic Balance: 0</p>
+            <button class="action-button" onclick="depositMatic()">Deposit</button>
+            <p id="deposit-address" style="display:none;">Loading deposit address...</p>
         </div>
-        <div class="tabs">
-            <button class="tab-button active" onclick="openTab(event, 'flash-tapper')">Flash Tapper</button>
-            <button class="tab-button" onclick="openTab(event, 'leaderboard')">Leaderboard</button>
-            <button class="tab-button" onclick="openTab(event, 'referrals')">Referrals</button>
+    </div>
+    <div id="flash-tapper" class="tab-content active">
+        
+        <div class="icon-container">
+            <img src="noob.png" alt="Icon" class="icon" id="coin">
         </div>
-        <div id="flash-tapper" class="tab-content active">
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            <div class="icon-container">
-                <img src="noob.png" alt="Icon" class="icon" id="coin">
-            </div>
-            <div class="tap-info">
-                <p id="taps-left">Taps Left: 100</p>
-                <p id="taps-done">Wallet Balance: 0</p>
-            </div>
-            <div class="buttons">
-                <button class="action-button" onclick="upgrade()">Upgrade</button>
-                <button class="action-button" onclick="dailyClaim()">Daily Claim</button>
-                <button class="action-button" onclick="tasks()">Tasks</button>
-            </div>
+        
+        
+        <div class="tap-info">
+            <p id="taps-done" class="tap-counter"><img src="noob.png" alt="Icon" class="small-icon"> 0</p>
+            <p id="taps-left" class="tap-counter">Taps Left: 100</p>
         </div>
-        <div id="leaderboard" class="tab-content">
-            <!-- Leaderboard content -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
         </div>
-        <div id="referrals" class="tab-content">
-            <!-- Referrals content -->
+        <div class="buttons">
+            <button class="action-button" onclick="upgrade()">Upgrade</button>
+            <button class="action-button" onclick="dailyClaim()">Daily Claim</button>
+            <button class="action-button" onclick="tasks()">Tasks</button>
         </div>
+    </div>
+    <div id="leaderboard" class="tab-content">
+        <!-- Leaderboard content -->
+    </div>
+    <div id="referrals" class="tab-content">
+        <!-- Referrals content -->
     </div>
     <script src="script.js"></script>
 </body>
