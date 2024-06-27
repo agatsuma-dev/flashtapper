@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
     let tapLimit = 100;
     let taps = 0;
+    let maticBalance = 0;
 
     function updateBars() {
         const progressBar = document.getElementById('progress-bar');
         progressBar.style.width = `${tapLimit}%`;
         document.getElementById('taps-left').textContent = `Taps Left: ${tapLimit}`;
-        document.getElementById('taps-done').textContent = `Wallet Balance: ${taps}`;
+        document.getElementById('taps-done').innerHTML = `<img src="noob.png" alt="Icon" class="small-icon"> ${taps}`;
     }
 
     function regenerateTapLimit() {
@@ -40,6 +41,23 @@ document.addEventListener("DOMContentLoaded", function() {
             button.classList.add("active");
         });
     });
+
+    window.showMaticBalance = function() {
+        document.getElementById('matic-modal').style.display = 'block';
+        document.getElementById('matic-balance').textContent = `Matic Balance: ${maticBalance}`;
+    }
+
+    window.closeMaticModal = function() {
+        document.getElementById('matic-modal').style.display = 'none';
+    }
+
+    window.depositMatic = function() {
+        const depositAddress = document.getElementById('deposit-address');
+        depositAddress.style.display = 'block';
+        setTimeout(() => {
+            depositAddress.textContent = 'Deposit Address: 123456';
+        }, 2000);
+    }
 });
 
 function upgrade() {
