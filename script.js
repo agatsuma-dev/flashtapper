@@ -21,12 +21,23 @@ document.addEventListener("DOMContentLoaded", function() {
         const savedTaps = localStorage.getItem('taps');
         const savedMaticBalance = localStorage.getItem('maticBalance');
         const savedTapLimit = localStorage.getItem('tapLimit');
+        const lastUpdate = localStorage.getItem('lastUpdate');
 
         if (savedTaps !== null) taps = parseInt(savedTaps, 10);
         if (savedMaticBalance !== null) maticBalance = parseInt(savedMaticBalance, 10);
         if (savedTapLimit !== null) tapLimit = parseInt(savedTapLimit, 10);
 
+        // Calculate the time difference and regenerate tap limit accordingly
+        if (lastUpdate !== null) {
+            const now = new Date().getTime();
+            const timeDifference = now - parseInt(lastUpdate, 10);
+            const tapsToRegenerate = Math.floor(timeDifference / 2000);
+            tapLimit = Math.min(tapLimit + tapsToRegenerate, 100);
+        }
+
         updateBars();
+        // Update the last update time
+        localStorage.setItem('lastUpdate', new Date().getTime());
     }
 
     function updateBars() {
