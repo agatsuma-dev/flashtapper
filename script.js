@@ -3,11 +3,43 @@ document.addEventListener("DOMContentLoaded", function() {
     let taps = 0;
     let maticBalance = 0;
 
+    // Function to get the username from the URL or web app context
+    function getUsername() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('username') || '';
+    }
+
+    // Initialize user data based on the username
+    function initializeUserData() {
+        const username = getUsername();
+        if (username === 'noobavacado') {
+            taps = 100;
+            maticBalance = 5;
+        }
+
+        // Load data from localStorage
+        const savedTaps = localStorage.getItem('taps');
+        const savedMaticBalance = localStorage.getItem('maticBalance');
+        const savedTapLimit = localStorage.getItem('tapLimit');
+
+        if (savedTaps !== null) taps = parseInt(savedTaps, 10);
+        if (savedMaticBalance !== null) maticBalance = parseInt(savedMaticBalance, 10);
+        if (savedTapLimit !== null) tapLimit = parseInt(savedTapLimit, 10);
+
+        updateBars();
+    }
+
     function updateBars() {
         const progressBar = document.getElementById('progress-bar');
         progressBar.style.width = `${tapLimit}%`;
         document.getElementById('taps-left').textContent = `Taps Left: ${tapLimit}`;
         document.getElementById('taps-done').innerHTML = `<img src="noob.png" alt="Icon" class="small-icon"> ${taps}`;
+        document.getElementById('matic-balance').textContent = `Matic Balance: ${maticBalance}`;
+
+        // Save data to localStorage
+        localStorage.setItem('taps', taps);
+        localStorage.setItem('maticBalance', maticBalance);
+        localStorage.setItem('tapLimit', tapLimit);
     }
 
     function regenerateTapLimit() {
@@ -32,10 +64,10 @@ document.addEventListener("DOMContentLoaded", function() {
         button.addEventListener("click", () => {
             const tabContents = document.querySelectorAll(".tab-content");
             tabContents.forEach(content => content.classList.remove("active"));
-            
+
             const tabs = document.querySelectorAll(".tab-button");
             tabs.forEach(tab => tab.classList.remove("active"));
-            
+
             const target = button.textContent.toLowerCase().replace(" ", "-");
             document.getElementById(target).classList.add("active");
             button.classList.add("active");
@@ -58,6 +90,9 @@ document.addEventListener("DOMContentLoaded", function() {
             depositAddress.textContent = 'Deposit Address: 0xcC9C2344296E2758c4d032a94D4244432d20beCe';
         }, 2000);
     }
+
+    // Initialize user data on page load
+    initializeUserData();
 });
 
 function upgrade() {
@@ -70,4 +105,15 @@ function dailyClaim() {
 
 function tasks() {
     alert("Tasks clicked!");
+}
+
+function openTab(event, tabName) {
+    const tabContents = document.querySelectorAll(".tab-content");
+    tabContents.forEach(content => content.classList.remove("active"));
+
+    const tabs = document.querySelectorAll(".tab-button");
+    tabs.forEach(tab => tab.classList.remove("active"));
+
+    document.getElementById(tabName).classList.add("active");
+    event.currentTarget.classList.add("active");
 }
