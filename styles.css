@@ -8,7 +8,6 @@ body {
     color: white;
     text-align: center;
     overflow: hidden; /* Hide scrollbars */
-
 }
 
 .scrollable-container {
@@ -23,7 +22,6 @@ body {
 .scrollable-container::-webkit-scrollbar {
     display: none;
 }
-
 
 .header {
     margin: 20px 0;
@@ -143,7 +141,6 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
-
 
 .modal {
     display: none; /* Hidden by default */
