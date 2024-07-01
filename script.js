@@ -1,43 +1,37 @@
 document.addEventListener("DOMContentLoaded", function() {
-    let tapLimit = 100;
-    let taps = 0;
-    let maticBalance = 0;
+    const loader = document.getElementById('loader-container');
+    const content = document.getElementById('content');
+  
+    window.onload = function() {
+      loader.style.display = 'none';
+      content.style.display = 'block';
+    }
+  });
+  
+document.addEventListener("DOMContentLoaded", function() {
+    const claimAmounts = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000];
+    const claimInterval = 5000; // 24 hours in milliseconds
+    const tapRegenerationRate = 1; // Number of taps regenerated per interval
+    const tapRegenerationInterval = 2000; // Interval in milliseconds
 
-    // Function to get the username from the URL or web app context
+    let taps = parseInt(localStorage.getItem('taps')) || 0;
+    let tapLimit = parseInt(localStorage.getItem('tapLimit')) || 100;
+    let maticBalance = parseInt(localStorage.getItem('maticBalance')) || 0;
+    let lastClaimTime = localStorage.getItem('lastClaimTime');
+    let claimedDays = parseInt(localStorage.getItem('claimedDays')) || 0;
+
     function getUsername() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('username') || '';
     }
 
-    // Initialize user data based on the username
     function initializeUserData() {
         const username = getUsername();
         if (username === 'noobavacado') {
             taps = 100;
             maticBalance = 5;
         }
-
-        // Load data from localStorage
-        const savedTaps = localStorage.getItem('taps');
-        const savedMaticBalance = localStorage.getItem('maticBalance');
-        const savedTapLimit = localStorage.getItem('tapLimit');
-        const lastUpdate = localStorage.getItem('lastUpdate');
-
-        if (savedTaps !== null) taps = parseInt(savedTaps, 10);
-        if (savedMaticBalance !== null) maticBalance = parseInt(savedMaticBalance, 10);
-        if (savedTapLimit !== null) tapLimit = parseInt(savedTapLimit, 10);
-
-        // Calculate the time difference and regenerate tap limit accordingly
-        if (lastUpdate !== null) {
-            const now = new Date().getTime();
-            const timeDifference = now - parseInt(lastUpdate, 10);
-            const tapsToRegenerate = Math.floor(timeDifference / 2000);
-            tapLimit = Math.min(tapLimit + tapsToRegenerate, 100);
-        }
-
         updateBars();
-        // Update the last update time
-        localStorage.setItem('lastUpdate', new Date().getTime());
     }
 
     function updateBars() {
@@ -47,20 +41,30 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('taps-done').innerHTML = `<img src="noob.png" alt="Icon" class="small-icon"> ${taps}`;
         document.getElementById('matic-balance').textContent = `Matic Balance: ${maticBalance}`;
 
-        // Save data to localStorage
+        // Save to localStorage
         localStorage.setItem('taps', taps);
-        localStorage.setItem('maticBalance', maticBalance);
         localStorage.setItem('tapLimit', tapLimit);
+        localStorage.setItem('maticBalance', maticBalance);
     }
 
     function regenerateTapLimit() {
-        if (tapLimit < 100) {
-            tapLimit++;
-            updateBars();
-        }
+        const lastTapTime = parseInt(localStorage.getItem('lastTapTime')) || Date.now();
+        const now = Date.now();
+        const elapsed = now - lastTapTime;
+        const tapsToRegenerate = Math.floor(elapsed / tapRegenerationInterval) * tapRegenerationRate;
+        
+        tapLimit = Math.min(tapLimit + tapsToRegenerate, 100);
+        localStorage.setItem('lastTapTime', now);
+        updateBars();
     }
 
-    setInterval(regenerateTapLimit, 2000);
+    setInterval(() => {
+        if (tapLimit < 100) {
+            tapLimit++;
+            localStorage.setItem('lastTapTime', Date.now());
+            updateBars();
+        }
+    }, tapRegenerationInterval);
 
     const coin = document.getElementById('coin');
     coin.addEventListener('click', () => {
@@ -75,10 +79,10 @@ document.addEventListener("DOMContentLoaded", function() {
         button.addEventListener("click", () => {
             const tabContents = document.querySelectorAll(".tab-content");
             tabContents.forEach(content => content.classList.remove("active"));
-
+            
             const tabs = document.querySelectorAll(".tab-button");
             tabs.forEach(tab => tab.classList.remove("active"));
-
+            
             const target = button.textContent.toLowerCase().replace(" ", "-");
             document.getElementById(target).classList.add("active");
             button.classList.add("active");
@@ -102,8 +106,72 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 2000);
     }
 
-    // Initialize user data on page load
+    window.openDailyClaimModal = function() {
+        document.getElementById('daily-claim-modal').style.display = 'block';
+        updateClaimBoxes();
+    }
+
+    window.closeDailyClaimModal = function() {
+        document.getElementById('daily-claim-modal').style.display = 'none';
+    }
+
+    function claimReward(day) {
+        if (day > claimedDays && new Date() - new Date(lastClaimTime) >= claimInterval) {
+            taps += claimAmounts[day];
+            claimedDays = day;
+            lastClaimTime = new Date().toISOString();
+            localStorage.setItem('claimedDays', claimedDays);
+            localStorage.setItem('lastClaimTime', lastClaimTime);
+            updateBars();
+            updateClaimBoxes();
+        }
+    }
+
+    function updateClaimBoxes() {
+        const claimContainer = document.getElementById('claim-container');
+        claimContainer.innerHTML = '';
+        for (let i = 0; i < claimAmounts.length; i++) {
+            const box = document.createElement('button');
+            box.classList.add('claim-box');
+            box.textContent = `${claimAmounts[i]} Coins`;
+            if (i <= claimedDays) {
+                box.classList.add('disabled');
+                box.disabled = true;
+            } else if (i === claimedDays + 1 && new Date() - new Date(lastClaimTime) >= claimInterval) {
+                box.onclick = () => claimReward(i);
+            } else {
+                box.classList.add('disabled');
+                box.disabled = true;
+            }
+            claimContainer.appendChild(box);
+        }
+        if (claimedDays < claimAmounts.length - 1 && new Date() - new Date(lastClaimTime) < claimInterval) {
+            const nextClaimTime = new Date(new Date(lastClaimTime).getTime() + claimInterval);
+            const timer = document.createElement('p');
+            timer.id = 'next-claim-timer';
+            claimContainer.appendChild(timer);
+            updateTimer(timer, nextClaimTime);
+            setInterval(() => updateTimer(timer, nextClaimTime), 1000);
+        }
+    }
+
+    function updateTimer(timer, nextClaimTime) {
+        const now = new Date();
+        const timeDiff = nextClaimTime - now;
+        if (timeDiff > 0) {
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            timer.textContent = `Next claim after: ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            timer.textContent = 'You can claim your reward now!';
+            updateClaimBoxes();
+        }
+    }
+
+    regenerateTapLimit();
     initializeUserData();
+    updateClaimBoxes();
 });
 
 function upgrade() {
@@ -116,15 +184,4 @@ function dailyClaim() {
 
 function tasks() {
     alert("Tasks clicked!");
-}
-
-function openTab(event, tabName) {
-    const tabContents = document.querySelectorAll(".tab-content");
-    tabContents.forEach(content => content.classList.remove("active"));
-
-    const tabs = document.querySelectorAll(".tab-button");
-    tabs.forEach(tab => tab.classList.remove("active"));
-
-    document.getElementById(tabName).classList.add("active");
-    event.currentTarget.classList.add("active");
 }
