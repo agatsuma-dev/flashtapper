@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div id="content" style="display: none;">
     <div class="header">
         <h1>Flash Tapper</h1>
     </div>
@@ -24,10 +25,20 @@
             <p id="deposit-address" style="display:none;">Loading deposit address...</p>
         </div>
     </div>
+    <div id="daily-claim-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDailyClaimModal()">&times;</span>
+            <div id="claim-container">
+                <!-- Daily claim boxes will be generated here -->
+            </div>
+        </div>
+    </div>
     <div id="flash-tapper" class="tab-content active">
+        
         <div class="icon-container">
             <img src="noob.png" alt="Icon" class="icon" id="coin">
         </div>
+        
         <div class="tap-info">
             <p id="taps-done" class="tap-counter"><img src="noob.png" alt="Icon" class="small-icon"> 0</p>
             <p id="taps-left" class="tap-counter">Taps Left: 100</p>
@@ -37,7 +48,7 @@
         </div>
         <div class="buttons">
             <button class="action-button" onclick="upgrade()">Upgrade</button>
-            <button class="action-button" onclick="dailyClaim()">Daily Claim</button>
+            <button class="action-button" onclick="openDailyClaimModal()">Daily Claim</button>
             <button class="action-button" onclick="tasks()">Tasks</button>
         </div>
     </div>
@@ -47,6 +58,16 @@
     <div id="referrals" class="tab-content">
         <!-- Referrals content -->
     </div>
+</div>
+<div id="loader-container"></div>
+    <script>
+    // Load the loader.html content into the loader-container div
+    fetch('loader.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('loader-container').innerHTML = data;
+      });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
