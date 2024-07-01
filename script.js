@@ -1,16 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const loader = document.getElementById('loader-container');
-    const content = document.getElementById('content');
-  
-    window.onload = function() {
-      loader.style.display = 'none';
-      content.style.display = 'block';
-    }
-  });
-  
-document.addEventListener("DOMContentLoaded", function() {
     const claimAmounts = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000];
-    const claimInterval = 5000; // 24 hours in milliseconds
+    const claimInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
     const tapRegenerationRate = 1; // Number of taps regenerated per interval
     const tapRegenerationInterval = 2000; // Interval in milliseconds
 
@@ -134,10 +124,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const box = document.createElement('button');
             box.classList.add('claim-box');
             box.textContent = `${claimAmounts[i]} Coins`;
-            if (i <= claimedDays) {
+            if (i < claimedDays) {
                 box.classList.add('disabled');
                 box.disabled = true;
-            } else if (i === claimedDays + 1 && new Date() - new Date(lastClaimTime) >= claimInterval) {
+            } else if (i === claimedDays && new Date() - new Date(lastClaimTime) >= claimInterval) {
                 box.onclick = () => claimReward(i);
             } else {
                 box.classList.add('disabled');
