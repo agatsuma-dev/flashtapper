@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div id="content" style="display: none;">
     <div class="header">
         <h1>Flash Tapper</h1>
     </div>
@@ -58,16 +57,6 @@
     <div id="referrals" class="tab-content">
         <!-- Referrals content -->
     </div>
-</div>
-<div id="loader-container"></div>
-    <script>
-    // Load the loader.html content into the loader-container div
-    fetch('loader.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('loader-container').innerHTML = data;
-      });
-    </script>
     <script src="script.js"></script>
 </body>
 </html>
