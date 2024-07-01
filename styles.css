@@ -207,3 +207,13 @@ body {
     flex: 1 1 30%;
     margin: 10px;
 }
+/* Leaderboard entry styles */
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    color: black;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
