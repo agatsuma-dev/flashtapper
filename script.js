@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function() {
             updateClaimBoxes();
         }
     }
+
     function updateClaimBoxes() {
         const claimContainer = document.getElementById('claim-container');
         claimContainer.innerHTML = '';
@@ -165,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function() {
     regenerateTapLimit();
     initializeUserData();
     updateClaimBoxes();
+
     const usernames = [
         "user1", "user2", "user3", "user4", "user5", 
         "user6", "user7", "user8", "user9", "user10"
@@ -214,3 +216,15 @@ function dailyClaim() {
 function tasks() {
     alert("Tasks clicked!");
 }
+
+// Assume you have a user object with properties like userId, lastClaimTimestamp, and balance
+const user = {
+    userId: '123',
+    lastClaimTimestamp: 0, // Initialize with a timestamp (e.g., 0 for first claim)
+    balance: 1000, // Initial balance
+};
+
+// Function to handle daily claim
+function handleDailyClaim() {
+    const currentTime = Date.now();
+    const oneDayInMillis = 24 * 60 * 60 * 1000
