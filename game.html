@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Falling Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Blurred background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('gameback.jpg') no-repeat center center fixed;
+      background-size: cover;
+      filter: blur(10px); /* 10px blur for subtle effect */
+      z-index: -1;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #score {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      color: white;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+
+    .fig2 {
+      position: absolute;
+      width: 50px;
+      cursor: pointer;
+    }
+
+    /* Popup styles */
+    #popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      display: none;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    #popup h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #popup button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #popup button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="score">Score: <span id="score-value">0</span></div>
+  </div>
+
+  <!-- Popup for final score -->
+  <div id="popup">
+    <h1>You've scored: <span id="final-score">0</span></h1>
+    <button id="back-home">Back to Homepage</button>
+  </div>
+
+  <script>
+    let score = 0;
+    const scoreEl = document.getElementById('score-value');
+    const finalScoreEl = document.getElementById('final-score');
+    const popup = document.getElementById('popup');
+    const backHomeBtn = document.getElementById('back-home');
+    const gameContainer = document.getElementById('game-container');
+
+    let fallingIntervalId;
+    let createFigIntervalId;
+
+    // Function to create a falling fig2
+    function createFallingFig2() {
+      const fig2 = document.createElement('img');
+      fig2.src = 'fig2.png';
+      fig2.classList.add('fig2');
+      fig2.style.left = Math.random() * window.innerWidth + 'px';
+      fig2.style.top = '-50px';
+      gameContainer.appendChild(fig2);
+
+      fig2.addEventListener('click', () => {
+        score += 3;
+        scoreEl.textContent = score;
+        fig2.remove();
+      });
+
+      // Make the fig fall
+      fallingIntervalId = setInterval(() => {
+        const currentTop = parseFloat(fig2.style.top);
+        if (currentTop > window.innerHeight) {
+          fig2.remove();
+          clearInterval(fallingIntervalId);
+        } else {
+          fig2.style.top = currentTop + Math.random() * 7 + 3 + 'px'; // Randomize falling speed
+        }
+      }, 30);
+    }
+
+    // Create more figs by increasing the frequency of fig creation
+    createFigIntervalId = setInterval(() => {
+      for (let i = 0; i < 3; i++) { // Create 3 figs per second
+        createFallingFig2();
+      }
+    }, 1000);
+
+    // After 30 seconds, stop the game, show popup with score and update balance
+    setTimeout(() => {
+      // Stop creating new figs and stop existing ones from falling
+      clearInterval(createFigIntervalId);
+      const figs = document.querySelectorAll('.fig2');
+      figs.forEach(fig => fig.remove());
+
+      let existingBalance = localStorage.getItem('balance') ? parseInt(localStorage.getItem('balance')) : 0;
+      localStorage.setItem('balance', existingBalance + score);
+
+      // Show final score in the popup
+      finalScoreEl.textContent = score;
+      popup.style.display = 'block';
+    }, 30000);
+
+    // Redirect back to index.html when the button is clicked
+    backHomeBtn.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
